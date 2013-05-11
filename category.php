@@ -4,21 +4,33 @@
   <div id="page-header">
   	<h1><?php printf( __( '%s' ), '<span>' . single_cat_title( '', false ) . '</span>' ); ?></h1>
   	<!-- displays the category's description from the Wordpress admin -->
-  	<?php echo category_description(); ?>
+  	<?php //echo category_description(); ?>
 	</div>
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-
-
-
-
-
-
-
-
-
-
-
-  <div class="post">
+		<?php 
+      if ($post_count % 5 == 0 && $post_count > 0) 
+      {
+		?>
+		  <div class="post_in_stream">
+		  	<div class="post_center">
+				<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-7469229883189621";
+					/* Instream */
+					google_ad_slot = "7891229067";
+					google_ad_width = 468;
+					google_ad_height = 60;
+					//-->
+					</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				</script>
+			</div>
+		  </div>
+	  <?php 
+      } 
+	    $post_count++;
+    ?>
+    <div class="post post-bar">
         <h2 class="post-title"><a href="<?php the_permalink() ?>" title="<?php the_title(); ?>" rel="bookmark"><?php the_title(); ?></a></h2>
         
         <div class="post-meta">
@@ -29,7 +41,7 @@
                <div class="social-buttons">
                  <div class="twitter-share-button">
                    <a href="http://twitter.com/share" class="twitter-share-button" 
-                                                      data-text="I just read a post on SideSixx.com" 
+                                                      data-text="<?php the_title(); ?>" 
                                                       data-count="horizontal" data-via="sidesixx" 
                                                       data-text="<?php the_title(); ?>" 
                                                       data-url="<?php the_permalink(); ?>">Tweet
@@ -38,7 +50,7 @@
                  </div>
                  &nbsp;
                  <div class="facebook-like-button">
-                   <iframe src="http://www.facebook.com/plugins/like.php?href=<?php the_permalink(); ?>&amp;layout=button_count&amp;show_faces=false&amp;width=250&amp;action=like&amp;colorscheme=light&amp;height=21" 
+                   <iframe src="http://www.facebook.com/plugins/like.php?href=<?php urlencode(the_permalink()); ?>&amp;layout=button_count&amp;show_faces=false&amp;width=250&amp;action=like&amp;colorscheme=light&amp;height=21" 
                                scrolling="no" 
                                frameborder="0" 
                                style="border:none; 
@@ -48,6 +60,9 @@
                                allowTransparency="true">
                    </iframe>
                  </div>
+                 <div class="google-plus-one">
+					<g:plusone size="medium" href="<?php urlencode(the_permalink()); ?>"></g:plusone>
+               </div>
             </div>
             
             </div>
@@ -56,29 +71,32 @@
             </p>
             <?php //if (the_tags('Tags: ', ', ', ' ')); ?>
         </div><!--.postMeta-->
-        <?php echo '<div class="featured-thumbnail">'; the_post_thumbnail(); echo '</div>'; ?> <!-- loades the post's featured thumbnail, requires Wordpress 3.0+ -->
+        <div class="post-holder">
+        <?php 
+        if (has_post_thumbnail())
+        {
+          echo '<div class="featured-thumbnail">'; the_post_thumbnail(); echo '</div>'; 
+        }
+        ?> <!-- loades the post's featured thumbnail, requires Wordpress 3.0+ -->
         <div class="post-content">
          <?php the_excerpt('<div class="post-readmore">Read more</div>'); ?>
+         <?php ngg_excerpt(); ?> 
+
         </div>
         <div class="post-categories"><?php the_tags('Filed Under: ', ', ', ''); ?></div>
+        </div>
       </div>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 	<?php endwhile; else: ?>
-		<div class="no-results">
-			<p><strong>There has been an error.</strong></p>
-			<p>We apologize for any inconvenience, please <a href="<?php bloginfo('url'); ?>/" title="<?php bloginfo('description'); ?>">return to the home page</a> or use the search form below.</p>
-			<?php get_search_form(); ?> <!-- outputs the default Wordpress search form-->
-		</div><!--noResults-->
+		  <div class="post">
+        <h3 class="post-title">Something went wrong...</h3>
+
+        <div class="post-content">
+          Looks like we can't find any content for this category. That sucks! Never fear though, we have plenty of other content over <a href="<?php bloginfo('url'); ?>">here</a>
+        </div>
+        <br />
+      </div>
 	<?php endif; ?>
 		
 	<nav class="oldernewer">

@@ -5,8 +5,8 @@
 	// Sidebar Widget
 	// Location: the sidebar
 	register_sidebar(array('name'=>'Sidebar',
-		'before_widget' => '<div id="widgit-sidebar" class="widgit-area"><ul>',
-		'after_widget' => '</ul></div>',
+		'before_widget' => '<li class="widget">',
+		'after_widget' => '</li>',
 		'before_title' => '<h3>',
 		'after_title' => '</h3>',
 	));
@@ -94,10 +94,87 @@
   function my_init_method() {
     if (!is_admin()) {
         wp_deregister_script( 'jquery' );
-        wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js');
+        wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js');
         wp_enqueue_script( 'jquery' );
+		wp_deregister_script( 'jquery_ui' );
+        wp_register_script( 'jquery_ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js');
+        wp_enqueue_script( 'jquery_ui' );
+		
     }
   }    
  
-add_action('init', 'my_init_method');
+  add_action('init', 'my_init_method');
+  
+  function ngg_excerpt() {
+    //get the post content
+    $content_data = get_the_content();
+    //extract shortcode from content
+    preg_match("/\[ngg([^}]*)\]/", $content_data ,$matches);
+    $results = $matches[1];
+    //if shortcode exists in content
+    if (!empty($results)){
+      //extract gallery id from shortcode
+      $gallery_id = preg_replace("/[^0-9]/", '', $matches[1]);
+      //make sure that NextGen is loaded
+      if (function_exists(nggShowGallery)){
+        //output gallery, showing only 4 images
+        echo nggShowGallery( $gallery_id, 'compact' , 10 );
+      }
+    }
+  }
+  
+  function insert_fb_tags() {
+    global $post;
+	$default_image="http://sidesixx.com/wp-content/themes/lorna/images/header-logo-orange.jpg"; //replace this with a default image on your server or an image in your media library
+    if ( !is_singular()) //if it is not a post or a page
+      return;
+    if(!has_post_thumbnail( $post->ID )) { //the post does not have featured image, use a default image
+      $thumbnail = $default_image;
+    }else{
+      $thumbnail = the_post_thumbnail();
+    }
+	echo '<!-- Start Facebook Opengraph -->';
+	echo '<meta property="og:url" content="' . the_permalink() . '" /> ';
+	echo '<meta property="og:title" content="' . the_title() . '" /> ';
+	echo '<meta property="og:description" content="' . substr(the_content(), 0, 50) . '..." /> ';
+	echo '<meta property="og:type" content="article" />' ;
+	echo '<meta property="og:image" content="' . $thumbnail . '" /> ';
+	echo '<meta property="og:site_name" content="SideSixx.com" /> ';
+	echo '<meta property="fb:admins" content="lorna.begg,thatsmarvellous"/>';
+    echo "\n";
+  }
+  
+  function get_tweet_count($url) {
+	$count = 0;
+	$data = wp_remote_get('ht'.'tp://urls.api.twitter.com/1/urls/count.json?url='.urlencode($url) );
+	if (!is_wp_error($data)) {
+		$resp = json_decode($data['body'],true);
+		if ($resp['count']) $count = $resp['count'];
+	}
+	return $count;
+  }
+  
+  
+  function limit_words($string, $word_limit) {
+ 
+	// creates an array of words from $string (this will be our excerpt)
+	// explode divides the excerpt up by using a space character
+ 
+	$words = explode(' ', $string);
+ 
+	// this next bit chops the $words array and sticks it back together
+	// starting at the first word '0' and ending at the $word_limit
+	// the $word_limit which is passed in the function will be the number
+	// of words we want to use
+	// implode glues the chopped up array back together using a space character
+ 
+	return implode(' ', array_slice($words, 0, $word_limit));
+ 
+  }
+  
+  
+  
+  
+  
+  
 ?>

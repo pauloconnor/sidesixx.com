@@ -5,12 +5,16 @@
     <div id="post-<?php the_ID(); ?>" <?php post_class('page'); ?>>
       <article>
         <div id="page-header">
-          <h2 class="post-title"><?php the_title(); ?></h1>
-          <?php edit_post_link('<small>Edit this entry</small>','',''); ?>
+          <h1 class="post-title"><?php the_title(); ?></h1>
         </div>
-        <div class="post">
-        <?php echo '<div class="featured-thumbnail">'; the_post_thumbnail(); echo '</div>'; ?> <!-- loades the post's featured thumbnail, requires Wordpress 3.0+ -->
-  
+        <div class="post post-bar">
+        <?php edit_post_link('<small>Edit this entry</small>','',''); ?>
+        <?php 
+        if (has_post_thumbnail())
+        {
+          echo '<div class="featured-thumbnail">'; the_post_thumbnail(); echo '</div>'; 
+        }
+        ?> <!-- loades the post's featured thumbnail, requires Wordpress 3.0+ -->  
         <div id="page-content">
           <?php the_content(); ?>
           <div class="pagination">
@@ -21,7 +25,7 @@
       </article>
     </div><!--#post-# .post-->
 
-    <?php comments_template( '', true ); ?>
+    <?php //comments_template( '', true ); ?>
 
   <?php endwhile; ?>
 </div><!--#content-->

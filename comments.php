@@ -10,6 +10,8 @@
 	    <?php endif; ?>
 	<?php endif; ?>
 	
+	<fb:comments href="<?php the_permalink(); ?>" num_posts="10" width="615"></fb:comments>
+	
 	<?php $i++; ?> <!-- variable for alternating comment styles -->
 	<?php if($comments) : ?>
 		<h3><?php comments_number('No comments', 'One comment', '% comments'); ?></h3>
@@ -48,10 +50,10 @@
 		    </ol>
 	    <?php } ?>
 	<?php else : ?>
-	    <p>No comments yet. You should be kind and add one!</p>
+	    <!--<p>No comments yet. You should be kind and add one!</p>-->
 	<?php endif; ?>
 	
-	<div id="comments-form">
+	<!--<div id="comments-form">
 		<?php if(comments_open()) : ?>
 		    <?php if(get_option('comment_registration') && !$user_ID) : ?>
 		        <p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logged in</a> to post a comment.</p><?php else : ?>
@@ -90,5 +92,5 @@
 		<?php else : ?>
 		    <p>The comments are closed.</p>
 		<?php endif; ?>
-	</div><!--#commentsForm-->
+	</div>--><!--#commentsForm-->
 </div><!--#comments-->
